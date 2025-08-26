@@ -10,15 +10,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t todo-app:latest .'
+                bat 'docker build -t todo-app:latest .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                sh 'docker stop todo-app || true'
-                sh 'docker rm todo-app || true'
-                sh 'docker run -d -p 5000:5000 --name todo-app todo-app:latest'
+                // Stop old container if exists
+                bat 'docker stop todo-app || exit 0'
+                // Remove old container if exists
+                bat 'docker rm todo-app || exit 0'
+                // Run new container
+                bat 'docker run -d -p 5000:5000 --name todo-app todo-app:latest'
             }
         }
     }
